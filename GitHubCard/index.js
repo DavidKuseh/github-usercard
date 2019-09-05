@@ -24,7 +24,7 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -54,7 +54,23 @@ const followersArray = [];
   bigknell
 */
 
-function gitCard(gitData){
+
+//step 1
+const container = document.querySelector('.cards');
+
+function getGithubUser(username){
+  axios.get(`https://api.github.com/users/${username}`)
+  .then(response => {
+    console.log(response);
+    container.appendChild(gitCard(response.data));
+  })
+  .catch( error => {
+    console.log(error);
+  })
+}
+
+// Step 3
+const gitCard = function (data){
   const card = document.createElement('div');
   const img = document.createElement('img');
   const cardInfo = document.createElement('div');
@@ -86,15 +102,21 @@ function gitCard(gitData){
   cardInfo.appendChild(bio);
 
   //set values
-  img.setAttribute('src', gitData.data.avatar_url);
-  name.textContent = gitData.data.name;
-  username.textContent = gitData.data.login;
-  location.textContent = gitData.data.location;
-  profile.setAttribute('href', gitData.data.html_url);
-  profile.textContent = gitData.data.html_url;
-  followers.textContent = gitData.data.followers;
-  following.textContent = gitData.data.following;
-  bio.textContent = gitData.data.bio;
+  img.setAttribute('src', data.avatar_url);
+  name.textContent = data.name;
+  username.textContent = data.login;
+  location.textContent = `Location: ${data.location}`;
+  profile.setAttribute('href', data.html_url);
+  profile.textContent = data.html_url;
+  followers.textContent = `Followers: ${data.followers}`;
+  following.textContent = `Following: ${data.following}`;
+  bio.textContent = `Bio: ${data.bio}`;
 
   return card;
 }
+
+const followersArray = ['tetondan','dustinmyers','justsml','luisrd','bigknell'];
+
+followersArray.forEach(getGithubUser);
+
+
